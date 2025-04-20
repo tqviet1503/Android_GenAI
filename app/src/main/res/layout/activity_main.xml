@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Health Dashboard"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="2dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Calories Circular ProgressBar (Red) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_calories"
+                    android:contentDescription="Calories Icon"/>
+
+                <ProgressBar
+                    android:id="@+id/caloriesProgressBar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:rotation="-90"
+                    android:indeterminate="false"
+                    android:max="400"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/circular_calories"/>
+            </LinearLayout>
+
+            <!-- Steps Circular ProgressBar (Orange) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_steps"
+                    android:contentDescription="Steps Icon" />
+
+                <ProgressBar
+                    android:id="@+id/stepsProgressBar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:rotation="-90"
+                    android:indeterminate="false"
+                    android:max="6000"
+                    android:progress="3600"
+                    android:progressDrawable="@drawable/circular_steps" />
+            </LinearLayout>
+
+            <!-- Moving Time Circular ProgressBar (Blue) -->
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_moving"
+                    android:contentDescription="Moving Icon" />
+
+                <ProgressBar
+                    android:id="@+id/movingTimeProgressBar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:rotation="-90"
+                    android:indeterminate="false"
+                    android:max="30"
+                    android:progress="6"
+                    android:progressDrawable="@drawable/circular_moving" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/analyzeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Doctor Analysis"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:textSize="16sp"
+            app:cornerRadius="8dp"
+            android:backgroundTint="@color/button_analyze"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nurseAnalyzeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:backgroundTint="#e66386"
+            android:padding="12dp"
+            android:text="Nurse Advice"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:cornerRadius="8dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="12dp"
+            android:backgroundTint="#FFFFFF">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+                <TextView
+                    android:id="@+id/adviceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/button_analyze"
+                    android:textStyle="bold"
+                    android:text="AI Analysis"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:id="@+id/aiAdvice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="16sp"
+                    android:maxLines="3"
+                    android:ellipsize="end"/>
+                <ProgressBar
+                    android:id="@+id/loadingIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <Button
+            android:id="@+id/toggleAdvice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show More"
+            android:textColor="#2196F3"
+            android:background="?android:attr/selectableItemBackground"
+            android:visibility="visible"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_margin="8dp"
+            android:layout_marginTop="30dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- First CardView: Existing Attributes -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="3"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+
+                                    <ImageView
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:src="@drawable/ic_calories"
+                                        android:contentDescription="Calories Icon"
+                                        android:layout_marginEnd="8dp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Calories"
+                                        android:textStyle="bold"
+                                        android:textSize="14dp" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/caloriesValue"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="156"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="/400 kcal"
+                                    android:textSize="12sp"
+                                    android:textColor="#B0B0B0"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+
+                                    <ImageView
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:src="@drawable/ic_steps"
+                                        android:contentDescription="Steps Icon"
+                                        android:layout_marginEnd="8dp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Steps"
+                                        android:textStyle="bold"
+                                        android:textSize="14dp" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/stepsValue"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="3681"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="/6000 step"
+                                    android:textSize="12sp"
+                                    android:textColor="#B0B0B0"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+
+                                    <ImageView
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:src="@drawable/ic_moving"
+                                        android:contentDescription="Moving Icon"
+                                        android:layout_marginEnd="8dp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Moving"
+                                        android:textStyle="bold"
+                                        android:textSize="14dp" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/movingTimeValue"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="9"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="/30 mins"
+                                    android:textSize="12sp"
+                                    android:textColor="#B0B0B0"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Second CardView: New Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_standing"
+                            android:contentDescription="Calories Icon"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Standing: "
+                            android:textSize="16dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="16dp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_heart_rate"
+                        android:contentDescription="Heart Icon"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView
+                        android:layout_marginTop="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Heart Rate"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/heartRateValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:textSize="20dp"
+                        android:textStyle="bold"/>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/heartRateChart"
+                        android:layout_width="160dp"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="-12dp"
+                        android:minHeight="75dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="12dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_blood_pressure"
+                        android:contentDescription="Pressure Icon"
+                        android:layout_marginEnd="8dp" />
+                    <TextView
+                        android:layout_marginTop="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Blood Pressure"
+                        android:textStyle="bold"
+                        android:textSize="16dp"/>
+                    <TextView
+                        android:id="@+id/bloodPressureValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:textSize="20dp"
+                        android:textStyle="bold"/>
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/bloodPressureChart"
+                        android:layout_width="160dp"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="-12dp"
+                        android:minHeight="75dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="12dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_temperature"
+                        android:contentDescription="Icon Temperature"
+                        android:layout_marginEnd="8dp" />
+                    <TextView
+                        android:layout_marginTop="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Temperature"
+                        android:textStyle="bold"
+                        android:textSize="16dp"/>
+                    <TextView
+                        android:id="@+id/temperatureValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:textSize="20dp"
+                        android:textStyle="bold"/>
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/temperatureChart"
+                        android:layout_width="160dp"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="-12dp"
+                        android:minHeight="75dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="12dp"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_spo2"
+                        android:contentDescription="Icon Temperature"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Blood Oxygen"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/spo2Value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:textSize="20dp"
+                        android:textStyle="bold"/>
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/bloodOxygenChart"
+                        android:layout_width="160dp"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="-12dp"
+                        android:minHeight="75dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
