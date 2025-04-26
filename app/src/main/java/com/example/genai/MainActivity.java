@@ -30,7 +30,9 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar movingTimeProgressBar, caloriesProgressBar, stepsProgressBar;
     private int heartRate;
     private LineChart heartRateChart, systolicChart, temperatureChart, spo2Chart;
+    private LineChart heartRateBigChart, systolicBigChart, temperatureBigChart, spo2BigChart;
     private HealthMetrics heartRateChartManager, systolicChartManager, temperatureChartManager, bloodOxygenChartManager;
+    private HealthMetrics heartRateBigChartManager, systolicBigChartManager, temperatureBigChartManager, bloodOxygenBigChartManager;
     private int spo2;
     private float temperature;
     private int bloodPressure;
@@ -87,17 +89,27 @@ public class MainActivity extends AppCompatActivity {
         caloriesValue = findViewById(R.id.caloriesValue);
         stepsValue = findViewById(R.id.stepsValue);
 
-        heartRateChart = findViewById(R.id.heartRateChart);
-        systolicChart = findViewById(R.id.bloodPressureChart);
-        temperatureChart = findViewById(R.id.temperatureChart);
-        spo2Chart = findViewById(R.id.bloodOxygenChart);
+//        heartRateChart = findViewById(R.id.heartRateChart);
+//        systolicChart = findViewById(R.id.bloodPressureChart);
+//        temperatureChart = findViewById(R.id.temperatureChart);
+//        spo2Chart = findViewById(R.id.bloodOxygenChart);
+
+        heartRateBigChart = findViewById(R.id.heartRateBigChart);
+        systolicBigChart = findViewById(R.id.bloodPressureBigChart);
+        temperatureBigChart = findViewById(R.id.temperatureBigChart);
+        spo2BigChart = findViewById(R.id.bloodOxygenBigChart);
 
         setupAdviceToggle();
 
-        heartRateChartManager = new HealthMetrics(this, heartRateChart, "Heart Rate (BPM)", Color.parseColor("#FF9999")); // Pastel Red
-        systolicChartManager = new HealthMetrics(this, systolicChart, "Systolic BP (mmHg)", Color.parseColor("#FFCC99")); // Pastel Orange
-        temperatureChartManager = new HealthMetrics(this, temperatureChart, "Temperature (°C)", Color.parseColor("#B5EAD7")); // Pastel Green
-        bloodOxygenChartManager = new HealthMetrics(this, spo2Chart, "Blood Oxygen (%)", Color.parseColor("#FBB6CE")); // Pastel Pink
+        heartRateChartManager = new HealthMetrics(this, heartRateChart, "Heart Rate (BPM)", Color.parseColor("#FF9999"), false); // Pastel Red
+        systolicChartManager = new HealthMetrics(this, systolicChart, "Systolic BP (mmHg)", Color.parseColor("#FFCC99"), false); // Pastel Orange
+        temperatureChartManager = new HealthMetrics(this, temperatureChart, "Temperature (°C)", Color.parseColor("#B5EAD7"), false); // Pastel Green
+        bloodOxygenChartManager = new HealthMetrics(this, spo2Chart, "Blood Oxygen (%)", Color.parseColor("#FBB6CE"), false); // Pastel Pink
+
+        heartRateBigChartManager = new HealthMetrics(this, heartRateBigChart, "Heart Rate (BPM)", Color.parseColor("#FF9999"), true); // Pastel Red
+        systolicBigChartManager = new HealthMetrics(this, systolicBigChart, "Systolic BP (mmHg)", Color.parseColor("#FFCC99"), true); // Pastel Orange
+        temperatureBigChartManager = new HealthMetrics(this, temperatureBigChart, "Temperature (°C)", Color.parseColor("#B5EAD7"), true); // Pastel Green
+        bloodOxygenBigChartManager = new HealthMetrics(this, spo2BigChart, "Blood Oxygen (%)", Color.parseColor("#FBB6CE"), true); // Pastel Pink
 
         // ai service object
         aiService = new AIService();
@@ -144,6 +156,11 @@ public class MainActivity extends AppCompatActivity {
         systolicChartManager.updateChart(systolic);
         temperatureChartManager.updateChart(temperature);
         bloodOxygenChartManager.updateChart(spo2);
+
+        heartRateBigChartManager.updateChart(heartRate);
+        systolicBigChartManager.updateChart(systolic);
+        temperatureBigChartManager.updateChart(temperature);
+        bloodOxygenBigChartManager.updateChart(spo2);
     }
 
     private void analyzeHealthStatus() {

@@ -2,12 +2,17 @@ package com.example.genai;
 
 import android.content.Context;
 import android.graphics.Color;
+
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
@@ -18,13 +23,17 @@ public class HealthMetrics {
     private final int lineColor;
     private int entryIndex = 0;
 
-    public HealthMetrics(Context context, LineChart chart, String metricLabel, int lineColor) {
+    public HealthMetrics(Context context, LineChart chart, String metricLabel, int lineColor, boolean isBigChart) {
         this.chart = chart;
         this.metricLabel = metricLabel;
         this.lineColor = lineColor;
-        setupChart();
-    }
 
+        if(!isBigChart){
+            setupChart();
+        }else{
+            setupBigChart();
+        }
+    }
     private void setupChart() {
         if (chart == null) return;
 
@@ -75,6 +84,98 @@ public class HealthMetrics {
         // Initialize empty data
         LineData data = new LineData();
         chart.setData(data);
+
+        chart.invalidate();
+    }
+
+    private void setupBigChart() {
+        if (chart == null) return;
+
+        chart.setDescription(null);
+        chart.setTouchEnabled(true);
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
+        chart.setPinchZoom(true);
+        chart.setDrawGridBackground(false);
+        chart.setBackgroundColor(Color.TRANSPARENT);
+        chart.setExtraOffsets(10f, 10f, 10f, 10f);
+
+        Legend legend = chart.getLegend();
+        legend.setEnabled(true);
+        legend.setForm(Legend.LegendForm.LINE);
+        legend.setTextColor(Color.BLACK);
+        legend.setTextSize(12f);
+
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(true);
+        xAxis.setGridColor(Color.LTGRAY);
+        xAxis.setGridLineWidth(0.5f);
+        xAxis.setGranularity(1f);
+        xAxis.setDrawLabels(true);
+        xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextSize(10f);
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return String.valueOf((int) value);
+            }
+        });
+
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setGridColor(Color.LTGRAY);
+        leftAxis.setGridLineWidth(0.5f);
+        leftAxis.setDrawLabels(true);
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setTextSize(10f);
+        leftAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return String.format("%.1f", value);
+            }
+        });
+
+        // Disable right Y-axis
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+        switch (metricLabel) {
+            case "Heart Rate (BPM)":
+                leftAxis.setAxisMinimum(50f);
+                leftAxis.setAxisMaximum(110f);
+                leftAxis.setLabelCount(4, true);
+                break;
+            case "Systolic BP (mmHg)":
+                leftAxis.setAxisMinimum(90f);
+                leftAxis.setAxisMaximum(160f);
+                leftAxis.setLabelCount(4, true);
+                break;
+            case "Temperature (°C)":
+                leftAxis.setAxisMinimum(35f);
+                leftAxis.setAxisMaximum(40f);
+                leftAxis.setLabelCount(4, true);
+                break;
+            case "Blood Oxygen (%)":
+                leftAxis.setAxisMinimum(90f);
+                leftAxis.setAxisMaximum(105f);
+                leftAxis.setLabelCount(4, true);
+                break;
+            default:
+                leftAxis.setAxisMinimum(0f);
+                leftAxis.setAxisMaximum(100f);
+                break;
+        }
+
+        // Initialize empty data
+        LineData data = new LineData();
+        chart.setData(data);
+
+        // Add animation
+        chart.animateY(1000, Easing.EaseInOutQuad); // Animate Y-axis over 1 second
+
+        chart.setHighlightPerTapEnabled(true);
+        chart.setHighlightPerDragEnabled(true);
 
         chart.invalidate();
     }
