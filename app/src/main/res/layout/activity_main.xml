@@ -36,22 +36,37 @@
                 android:orientation="vertical"
                 android:padding="8dp"
                 android:gravity="center">
+
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_calories"
                     android:contentDescription="Calories Icon"/>
 
-                <ProgressBar
-                    android:id="@+id/caloriesProgressBar"
+                <FrameLayout
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:rotation="-90"
-                    android:indeterminate="false"
-                    android:max="400"
-                    android:progress="100"
-                    android:progressDrawable="@drawable/circular_calories"/>
+                    android:layout_height="100dp">
+
+                    <ProgressBar
+                        android:id="@+id/caloriesProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:rotation="-90"
+                        android:indeterminate="false"
+                        android:max="400"
+                        android:progress="100"
+                        android:progressDrawable="@drawable/circular_calories"/>
+
+                    <TextView
+                        android:id="@+id/caloriesPercentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="25%"
+                        android:textSize="16sp"
+                        android:textColor="#FF0000" />
+                </FrameLayout>
             </LinearLayout>
 
             <!-- Steps Circular ProgressBar (Orange) -->
@@ -61,22 +76,37 @@
                 android:orientation="vertical"
                 android:padding="8dp"
                 android:gravity="center">
+
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_steps"
                     android:contentDescription="Steps Icon" />
 
-                <ProgressBar
-                    android:id="@+id/stepsProgressBar"
+                <FrameLayout
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:rotation="-90"
-                    android:indeterminate="false"
-                    android:max="6000"
-                    android:progress="3600"
-                    android:progressDrawable="@drawable/circular_steps" />
+                    android:layout_height="100dp">
+
+                    <ProgressBar
+                        android:id="@+id/stepsProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:rotation="-90"
+                        android:indeterminate="false"
+                        android:max="6000"
+                        android:progress="3600"
+                        android:progressDrawable="@drawable/circular_steps" />
+
+                    <TextView
+                        android:id="@+id/stepsPercentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="60%"
+                        android:textSize="16sp"
+                        android:textColor="#FFA500" />
+                </FrameLayout>
             </LinearLayout>
 
             <!-- Moving Time Circular ProgressBar (Blue) -->
@@ -93,16 +123,30 @@
                     android:src="@drawable/ic_moving"
                     android:contentDescription="Moving Icon" />
 
-                <ProgressBar
-                    android:id="@+id/movingTimeProgressBar"
+                <FrameLayout
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:rotation="-90"
-                    android:indeterminate="false"
-                    android:max="30"
-                    android:progress="6"
-                    android:progressDrawable="@drawable/circular_moving" />
+                    android:layout_height="100dp">
+
+                    <ProgressBar
+                        android:id="@+id/movingTimeProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:rotation="-90"
+                        android:indeterminate="false"
+                        android:max="30"
+                        android:progress="6"
+                        android:progressDrawable="@drawable/circular_moving" />
+
+                    <TextView
+                        android:id="@+id/movingTimePercentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="20%"
+                        android:textSize="16sp"
+                        android:textColor="#0000FF" />
+                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
 

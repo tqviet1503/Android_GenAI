@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView toggleAdviceButton;
     private boolean isAdviceExpanded = false;
     private TextView heartRateValue, spo2Value, temperatureValue, bloodPressureValue, caloriesValue, stepsValue, movingTimeValue, adviceText;
+    private TextView caloriesPercentage, stepsPercentage, movingTimePercentage; // Added TextViews to display percentages
     private ProgressBar movingTimeProgressBar, caloriesProgressBar, stepsProgressBar;
     private int heartRate;
     private LineChart heartRateChart, systolicChart, temperatureChart, spo2Chart;
@@ -40,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private Button analyzeButton, nurseAnalyzeButton;
     private ProgressBar loadingIndicator;
     private AIService aiService;
+
+    // Define maximum values
+    private static final int MAX_MOVING_TIME = 30;    // 30 minutes
+    private static final int MAX_CALORIES = 400;      // 400 kcal
+    private static final int MAX_STEPS = 6000;       // 6000 steps
+
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Random random = new Random();
     private final Runnable updateRunnable = new Runnable() {
@@ -51,9 +58,10 @@ public class MainActivity extends AppCompatActivity {
             temperature = 36.0f + random.nextFloat() * 2.0f; // 36.0-38.0°C
             bloodPressure = 100 + random.nextInt(6) * 10; // Generates 100, 110, 120, ..., 150
 
-            movingTime = random.nextInt(31); // Generates 0-30 mins
-            calories = random.nextInt(301) + 100; // Generates 100-500 kcal
-            steps = random.nextInt(6001); // Generates 0-6000 steps
+            // Generate random values based on defined MAX constants
+            movingTime = random.nextInt(MAX_MOVING_TIME + 1); // 0-30 mins
+            calories = random.nextInt(MAX_CALORIES - 99) + 100; // 100-500 kcal
+            steps = random.nextInt(MAX_STEPS + 1); // 0-10,000 steps
 
             updateHealthMetrics();
 
@@ -72,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         toggleAdviceButton = findViewById(R.id.toggleAdvice);
         adviceText = findViewById(R.id.adviceText);
 
-        // get view references
+        // Get view references
         heartRateValue = findViewById(R.id.heartRateValue);
         spo2Value = findViewById(R.id.spo2Value);
         temperatureValue = findViewById(R.id.temperatureValue);
@@ -88,6 +96,16 @@ public class MainActivity extends AppCompatActivity {
         movingTimeValue = findViewById(R.id.movingTimeValue);
         caloriesValue = findViewById(R.id.caloriesValue);
         stepsValue = findViewById(R.id.stepsValue);
+
+        // Find the TextViews to display percentages in circular progress bars
+        caloriesPercentage = findViewById(R.id.caloriesPercentage);
+        stepsPercentage = findViewById(R.id.stepsPercentage);
+        movingTimePercentage = findViewById(R.id.movingTimePercentage);
+
+        // Set maximum values for the ProgressBars - set before usage
+        movingTimeProgressBar.setMax(MAX_MOVING_TIME);
+        caloriesProgressBar.setMax(MAX_CALORIES);
+        stepsProgressBar.setMax(MAX_STEPS);
 
 //        heartRateChart = findViewById(R.id.heartRateChart);
 //        systolicChart = findViewById(R.id.bloodPressureChart);
@@ -111,12 +129,21 @@ public class MainActivity extends AppCompatActivity {
         temperatureBigChartManager = new HealthMetrics(this, temperatureBigChart, "Temperature (°C)", Color.parseColor("#B5EAD7"), true); // Pastel Green
         bloodOxygenBigChartManager = new HealthMetrics(this, spo2BigChart, "Blood Oxygen (%)", Color.parseColor("#FBB6CE"), true); // Pastel Pink
 
-        // ai service object
+        // AI service object
         aiService = new AIService();
 
         analyzeButton.setOnClickListener(v -> analyzeHealthStatus());
         nurseAnalyzeButton.setOnClickListener(v -> nurseAdvice());
         handler.post(updateRunnable);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Reset maximum values when the activity resumes, ensuring they are always applied
+        movingTimeProgressBar.setMax(MAX_MOVING_TIME);
+        caloriesProgressBar.setMax(MAX_CALORIES);
+        stepsProgressBar.setMax(MAX_STEPS);
     }
 
     private void setupAdviceToggle() {
@@ -140,18 +167,39 @@ public class MainActivity extends AppCompatActivity {
         heartRateValue.setText(heartRate + " BPM");
         spo2Value.setText(spo2 + "%");
         temperatureValue.setText(String.format("%.2f°C", temperature));
+
         int systolic = bloodPressure;
-        int diastolic = 0;
-        diastolic = systolic - (30 + random.nextInt(21));
+        int diastolic = systolic - (30 + random.nextInt(21));
         bloodPressureValue.setText(systolic + "/" + diastolic);
+
+        // Update ProgressBar values
         movingTimeProgressBar.setProgress(movingTime);
         caloriesProgressBar.setProgress(calories);
         stepsProgressBar.setProgress(steps);
 
-        movingTimeValue.setText(String.format("%d", movingTime));
-        caloriesValue.setText(String.format("%d", calories));
-        stepsValue.setText(String.format("%d", steps));
+        // Calculate percentages based on defined MAX constants,
+        // instead of using getMax() to avoid synchronization issues
+        int movingTimePercent = (int)((movingTime * 100.0) / MAX_MOVING_TIME);
+        int caloriesPercent = (int)((calories * 100.0) / MAX_CALORIES);
+        int stepsPercent = (int)((steps * 100.0) / MAX_STEPS);
 
+        // Update display with units and percentages in detail
+        movingTimeValue.setText(String.format("%d mins (%d%%)", movingTime, movingTimePercent));
+        caloriesValue.setText(String.format("%d kcal (%d%%)", calories, caloriesPercent));
+        stepsValue.setText(String.format("%d steps (%d%%)", steps, stepsPercent));
+
+        // Update percentage display in circular progress bars
+        if (caloriesPercentage != null) {
+            caloriesPercentage.setText(caloriesPercent + "%");
+        }
+        if (stepsPercentage != null) {
+            stepsPercentage.setText(stepsPercent + "%");
+        }
+        if (movingTimePercentage != null) {
+            movingTimePercentage.setText(movingTimePercent + "%");
+        }
+
+        // Update the chart
         heartRateChartManager.updateChart(heartRate);
         systolicChartManager.updateChart(systolic);
         temperatureChartManager.updateChart(temperature);
@@ -179,22 +227,22 @@ public class MainActivity extends AppCompatActivity {
         String steps = String.valueOf(stepsProgressBar.getProgress());
 
         aiService.analyzeHealthMetrics(heartRate, spo2, temperature, bloodPressure, movingTime, calories, steps)
-            .addOnSuccessListener(response -> {
-                String rawText = response.getText();
-                Markwon markwon = Markwon.create(this);
-                Spanned markdown = markwon.toMarkdown(rawText);
-                aiAdviceTextView.setText(markdown);
-                aiAdviceTextView.setVisibility(View.VISIBLE);
+                .addOnSuccessListener(response -> {
+                    String rawText = response.getText();
+                    Markwon markwon = Markwon.create(this);
+                    Spanned markdown = markwon.toMarkdown(rawText);
+                    aiAdviceTextView.setText(markdown);
+                    aiAdviceTextView.setVisibility(View.VISIBLE);
 
-                loadingIndicator.setVisibility(View.GONE);
-                analyzeButton.setEnabled(true);
-            })
-            .addOnFailureListener(e -> {
-                aiAdviceTextView.setText("Unable to generate advice at this time. Please try again.");
-                aiAdviceTextView.setVisibility(View.VISIBLE);
-                loadingIndicator.setVisibility(View.GONE);
-                analyzeButton.setEnabled(true);
-            });
+                    loadingIndicator.setVisibility(View.GONE);
+                    analyzeButton.setEnabled(true);
+                })
+                .addOnFailureListener(e -> {
+                    aiAdviceTextView.setText("Unable to generate advice at this time. Please try again.");
+                    aiAdviceTextView.setVisibility(View.VISIBLE);
+                    loadingIndicator.setVisibility(View.GONE);
+                    analyzeButton.setEnabled(true);
+                });
     }
 
     private void nurseAdvice() {
